@@ -1,0 +1,91 @@
+<div class="container my-3">
+    <div  *ngIf="afficherListe ==true">
+       <h3 class="text-center my-4">Gestion des Carriére</h3>
+       <button class="btn btn-primary mb-5" (click)="afficherFormulaire()">Ajouter</button>
+       <div class="form-group">
+        <input carriere="text" class="form-control" placeholder="Type to search" [(ngModel)]="data">
+      </div>
+       <table class="table">
+       <thead class="thead-dark my-4">
+         <tr>
+           <th>Numero</th>
+           <th>nom</th>
+           <th>type</th>
+           <th>localite</th>
+           <th>Actions</th>
+         </tr>
+       </thead>
+       <tbody >
+           <tr *ngFor="let carriere of carrieres | filter:data | paginate:{itemsPerPage:taille_de_la_table
+            ,currentPage:pagination,totalItems: compteur};let i=index">
+               <td>{{i+1}}</td>
+               <td>{{carriere.nom}}</td>
+               <td>{{carriere.type.nom}}</td>
+               <td>{{carriere.localite.ville}}</td>
+               <td>
+                <button (click)="afficherFormulaireMof(carriere)" class="btn btn-outline-success  pl-3 pr-3 mx-2"><i class="fas fa-pencil"></i> Modifier</button>
+                <button (click)="deleteById(carriere.id)"  class="btn btn-outline-danger pl-3 " ><i class="fas fa-trash"></i> Delete</button>
+               
+              </td>
+           <tr>
+       </tbody>
+       <pagination-controls  previousLabel="Precedant"
+       nextLabel="Suivant" (pageChange)="onTableDataChange($event)"></pagination-controls>
+       </table>
+    </div>
+
+<div *ngIf="afficherListe==false">
+   <h3 class="text-center my-4">Ajouter une carriere</h3>
+   <button carriere="button" class="btn btn-primary mb-5" (click)="afficherTableaux()">Voir la liste</button>
+   <form novalidate (ngSubmit)="onSubmit()" #regitercarriere="ngForm">
+       <div class="form-group row">
+         <label for="inputEmail3" class="col-sm-2 col-form-label">Nom</label>
+         <div class="col-sm-10">
+           <input carriere="text" class="form-control" id="inputEmail3" placeholder="entrez le nom du carriere" [(ngModel)]="carriere.nom" required minlength="4" maxlength="16"
+           name="nom"  #nom="ngModel" [ngClass]="{'is-invalid':nom.touched && !nom.valid,'is-valid':nom.touched && nom.valid}" >
+           <div class="invalid-feedback">
+            <span *ngIf="nom.errors?.required">le nom est obligatoire</span>
+            <span *ngIf="nom.errors?.minlength">Votre nom doit avoir 4 charactère au minimum</span>
+            <span *ngIf="nom.errors?.maxlength">Votre nom doit avoir 16 charactère au maximum</span>
+           </div>
+         </div>
+       </div>
+       <div class="form-group row">
+        <label for="inputtype" class="col-sm-2 col-form-label">Type</label>
+        <div class="col-sm-10">
+          <select class="form-control" id="inputtype" [(ngModel)]="carriere.type" name="type" required
+                  #type="ngModel" [ngClass]="{'is-invalid': type.touched && !type.valid, 'is-valid': type.touched && type.valid}">
+            <option value="" disabled selected>Choisissez un type</option>
+            <option *ngFor="let type of types" [ngValue]="type">{{type.nom}}</option>
+          </select>
+          <div class="invalid-feedback">
+            <span *ngIf="type.errors?.required">Le type est obligatoire</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="inputlocalite" class="col-sm-2 col-form-label">Localité</label>
+        <div class="col-sm-10">
+          <select class="form-control" id="inputlocalite" [(ngModel)]="carriere.localite" name="localite" required
+                  #localite="ngModel" [ngClass]="{'is-invalid': localite.touched && !localite.valid, 'is-valid': localite.touched && localite.valid}">
+            <option value="" disabled selected>Choisissez une localite</option>
+            <option *ngFor="let localite of localities" [ngValue]="localite">{{localite.ville}}</option>
+          </select>
+          <div class="invalid-feedback">
+            <span *ngIf="localite.errors?.required">La localite est obligatoire</span>
+          </div>
+        </div>
+      </div>
+      
+
+ 
+       <div class="form-group row">
+         <div class="col-sm-10">
+           <button carriere="submit" [disabled]="regitercarriere.invalid" class="btn btn-success">Enregistrer</button>
+         </div>
+       </div>
+     </form>
+</div>
+</div>
+

@@ -1,0 +1,88 @@
+<div class="container my-3">
+    <div  *ngIf="afficherListe ==true">
+       <h3 class="text-center my-4">Gestion des Localités</h3>
+       <button class="btn btn-primary mb-5" (click)="afficherFormulaire()">Ajouter</button>
+       <div class="form-group">
+        <input type="text" class="form-control" placeholder="Type to search" [(ngModel)]="data">
+      </div>
+       <table class="table">
+       <thead class="thead-dark my-4">
+         <tr>
+           <th>Numero</th>
+           <th>Ville</th>
+           <th>Prefecture</th>
+           <th>Region</th>
+           <th>Actions</th>
+         </tr>
+       </thead>
+       <tbody >
+           <tr *ngFor="let localite of localities | filter:data | paginate:{itemsPerPage:taille_de_la_table
+            ,currentPage:pagination,totalItems: compteur};let i=index">
+               <td>{{i+1}}</td>
+               <td>{{localite.ville}}</td>
+               <td>{{localite.prefecture}}</td>
+               <td>{{localite.region}}</td>
+               <td>
+                <button  (click)="afficherFormulaireMof(localite)" class="btn btn-outline-success  pl-3 pr-3 mx-2"><i class="fas fa-pencil"></i> Modifier</button>
+                <button (click)="deleteById(localite.id)"  class="btn btn-outline-danger pl-3 " ><i class="fas fa-trash"></i> Delete</button>
+               
+              </td>
+           <tr>
+       </tbody>
+       <pagination-controls  previousLabel="Precedant"
+       nextLabel="Suivant" (pageChange)="onTableDataChange($event)"></pagination-controls>
+       </table>
+    </div>
+
+<div *ngIf="afficherListe==false">
+   <h3 class="text-center my-4">Ajouter une localite</h3>
+   <button type="button" class="btn btn-primary mb-5" (click)="afficherTableaux()">Voir la liste</button>
+   <form novalidate (ngSubmit)="onSubmit()" #regiterLocalite="ngForm">
+       <div class="form-group row">
+         <label for="inputEmail3" class="col-sm-2 col-form-label">Ville</label>
+         <div class="col-sm-10">
+           <input type="text" class="form-control" id="inputEmail3" placeholder="entrez la ville" [(ngModel)]="localite.ville" required minlength="4" maxlength="16"
+           name="ville"  #ville="ngModel" [ngClass]="{'is-invalid':ville.touched && !ville.valid,'is-valid':ville.touched && ville.valid}" >
+           <div class="invalid-feedback">
+            <span *ngIf="ville.errors?.required">le ville est obligatoire</span>
+            <span *ngIf="ville.errors?.minlength">Votre ville doit avoir 4 charactère au minimum</span>
+            <span *ngIf="ville.errors?.maxlength">Votre ville doit avoir 16 charactère au maximum</span>
+           </div>
+         </div>
+       </div>
+
+       <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Préfecture</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputEmail3" placeholder="entrez la prefecture" [(ngModel)]="localite.prefecture" required minlength="4" maxlength="16"
+          name="prefecture"  #prefecture="ngModel" [ngClass]="{'is-invalid':prefecture.touched && !prefecture.valid,'is-valid':prefecture.touched && prefecture.valid}" >
+          <div class="invalid-feedback">
+           <span *ngIf="prefecture.errors?.required">le prefecture est obligatoire</span>
+           <span *ngIf="prefecture.errors?.minlength">Votre prefecture doit avoir 4 charactère au minimum</span>
+           <span *ngIf="prefecture.errors?.maxlength">Votre prefecture doit avoir 16 charactère au maximum</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Ville</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputEmail3" placeholder="entrez la region" [(ngModel)]="localite.region" required minlength="4" maxlength="16"
+          name="region"  #region="ngModel" [ngClass]="{'is-invalid':region.touched && !region.valid,'is-valid':region.touched && region.valid}" >
+          <div class="invalid-feedback">
+           <span *ngIf="region.errors?.required">le region est obligatoire</span>
+           <span *ngIf="region.errors?.minlength">Votre region doit avoir 4 charactère au minimum</span>
+           <span *ngIf="region.errors?.maxlength">Votre region doit avoir 16 charactère au maximum</span>
+          </div>
+        </div>
+      </div>
+ 
+       <div class="form-group row">
+         <div class="col-sm-10">
+           <button type="submit" [disabled]="regiterLocalite.invalid" class="btn btn-success">Enregistrer</button>
+         </div>
+       </div>
+     </form>
+</div>
+</div>
+
